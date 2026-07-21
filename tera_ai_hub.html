@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tera AI - Hub</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #050511; /* Very dark background to pop cards */
+            color: #f8fafc;
+            overflow: hidden; /* Prevent scrolling, focus on hub */
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Background animated elements */
+        .bg-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(100px);
+            opacity: 0.3;
+            z-index: -1;
+            animation: float 20s infinite ease-in-out alternate;
+        }
+
+        @keyframes float {
+            0% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(30px, -50px) scale(1.1); }
+            66% { transform: translate(-20px, 20px) scale(0.9); }
+            100% { transform: translate(0, 0) scale(1); }
+        }
+
+        .stage-container {
+            perspective: 1200px;
+            position: relative;
+            width: 100%;
+            height: 500px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .stage-card {
+            position: absolute;
+            width: 340px;
+            height: 440px;
+            border-radius: 24px;
+            background: rgba(30, 41, 59, 0.6);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            transition: all 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+            display: flex;
+            flex-direction: column;
+            padding: 2.5rem;
+            cursor: pointer;
+            box-shadow: 0 10px 30px -10px rgba(0,0,0,0.5);
+        }
+
+        /* Decorative border glow */
+        .stage-card::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: inherit;
+            padding: 1px;
+            background: linear-gradient(180deg, rgba(255,255,255,0.15), transparent);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            pointer-events: none;
+        }
+
+        .pos-front {
+            transform: translateX(0) translateZ(0) scale(1);
+            z-index: 40;
+            opacity: 1;
+            box-shadow: 0 0 50px rgba(139, 92, 246, 0.2), 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            border-color: rgba(139, 92, 246, 0.4);
+        }
+
+        .pos-right {
+            transform: translateX(85%) translateZ(-150px) scale(0.85) rotateY(-10deg);
+            z-index: 30;
+            opacity: 0.5;
+        }
+        
+        .pos-right:hover {
+            opacity: 0.8;
+            transform: translateX(85%) translateZ(-130px) scale(0.87) rotateY(-10deg);
+        }
+
+        .pos-back {
+            transform: translateX(0) translateZ(-300px) scale(0.7);
+            z-index: 20;
+            opacity: 0.15;
+            pointer-events: none; /* Can't click the back one directly easily */
+        }
+
+        .pos-left {
+            transform: translateX(-85%) translateZ(-150px) scale(0.85) rotateY(10deg);
+            z-index: 30;
+            opacity: 0.5;
+        }
+        
+        .pos-left:hover {
+            opacity: 0.8;
+            transform: translateX(-85%) translateZ(-130px) scale(0.87) rotateY(10deg);
+        }
+
+        .icon-box {
+            background: linear-gradient(135deg, rgba(255,255,255,0.05), rgba(255,255,255,0.01));
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .coming-soon-badge {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: #94a3b8;
+        }
+        
+        .card-disabled {
+            filter: grayscale(80%);
+        }
+        .pos-front.card-disabled {
+            filter: grayscale(40%); /* Less gray when front */
+        }
+    </style>
+</head>
+<body class="antialiased relative">
+
+    <div class="bg-orb w-[40rem] h-[40rem] bg-indigo-900/40 top-0 left-0 transform -translate-x-1/2 -translate-y-1/2"></div>
+    <div class="bg-orb w-[30rem] h-[30rem] bg-fuchsia-900/30 bottom-0 right-0 transform translate-x-1/3 translate-y-1/3" style="animation-delay: -5s;"></div>
+
+    <nav class="w-full z-50 pt-8 pb-4 flex justify-center items-center absolute top-0">
+        <div class="flex items-center gap-3">
+            <div class="p-2 bg-white/5 rounded-xl border border-white/10 backdrop-blur-md">
+                <i data-lucide="layers" class="w-6 h-6 text-violet-400"></i>
+            </div>
+            <span class="text-2xl font-bold tracking-tight">Tera<span class="text-violet-400">AI</span> Hub</span>
+        </div>
+    </nav>
+
+    <main class="flex-grow flex flex-col justify-center items-center w-full h-full relative z-10 pt-16">
+        
+        <div class="text-center mb-6 opacity-80">
+            <p class="text-slate-400 text-sm font-medium tracking-widest uppercase">Select Application</p>
+        </div>
+
+        <div class="w-full max-w-6xl mx-auto relative">
+            <div class="stage-container w-full" id="cardStage">
+                
+                <div class="stage-card" data-index="0">
+                    <div class="icon-box w-16 h-16 rounded-2xl flex items-center justify-center mb-8 bg-blue-500/10 border-blue-500/20 text-blue-400">
+                        <i data-lucide="message-square" class="w-8 h-8"></i>
+                    </div>
+                    <h3 class="text-3xl font-bold mb-4 text-white tracking-tight">Tera AI Chatbot</h3>
+                    <p class="text-slate-400 text-base mb-8 flex-grow leading-relaxed">
+                        Engage with our most advanced conversational AI. Perfect for coding, writing, and complex problem solving.
+                    </p>
+                    <button class="w-full py-3.5 rounded-xl bg-blue-600 hover:bg-blue-500 transition-colors text-white font-semibold shadow-[0_0_15px_rgba(59,130,246,0.4)] flex items-center justify-center gap-2">
+                        Launch Chat <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                    </button>
+                </div>
+
+                <div class="stage-card" data-index="1">
+                    <div class="icon-box w-16 h-16 rounded-2xl flex items-center justify-center mb-8 bg-emerald-500/10 border-emerald-500/20 text-emerald-400">
+                        <i data-lucide="bar-chart-2" class="w-8 h-8"></i>
+                    </div>
+                    <h3 class="text-3xl font-bold mb-4 text-white tracking-tight">Tera AI Polling</h3>
+                    <p class="text-slate-400 text-base mb-8 flex-grow leading-relaxed">
+                        Create intelligent polls, gather real-time sentiment analysis, and visualize consensus driven by AI insights.
+                    </p>
+                    <button class="w-full py-3.5 rounded-xl bg-white/10 hover:bg-white/20 border border-white/10 transition-colors text-white font-semibold flex items-center justify-center gap-2">
+                        Open Polling Dashboard
+                    </button>
+                </div>
+
+                <div class="stage-card card-disabled" data-index="2">
+                    <div class="absolute top-6 right-6">
+                        <span class="coming-soon-badge text-[10px] font-bold px-3 py-1.5 rounded-full uppercase tracking-wider">Coming Soon</span>
+                    </div>
+                    <div class="icon-box w-16 h-16 rounded-2xl flex items-center justify-center mb-8 text-slate-400">
+                        <i data-lucide="clipboard-list" class="w-8 h-8"></i>
+                    </div>
+                    <h3 class="text-3xl font-bold mb-4 text-slate-300 tracking-tight">Tera Evaluation</h3>
+                    <p class="text-slate-500 text-base mb-8 flex-grow leading-relaxed">
+                        Comprehensive benchmarking and fine-grained evaluation tools for enterprise LLM deployments.
+                    </p>
+                    <button class="w-full py-3.5 rounded-xl bg-white/5 border border-white/5 text-slate-500 font-semibold cursor-not-allowed flex items-center justify-center gap-2">
+                        <i data-lucide="lock" class="w-4 h-4"></i> Available Q4
+                    </button>
+                </div>
+
+                <div class="stage-card card-disabled" data-index="3">
+                    <div class="absolute top-6 right-6">
+                        <span class="coming-soon-badge text-[10px] font-bold px-3 py-1.5 rounded-full uppercase tracking-wider">Coming Soon</span>
+                    </div>
+                    <div class="icon-box w-16 h-16 rounded-2xl flex items-center justify-center mb-8 text-slate-400">
+                        <i data-lucide="camera" class="w-8 h-8"></i>
+                    </div>
+                    <h3 class="text-3xl font-bold mb-4 text-slate-300 tracking-tight">Tera Ecam</h3>
+                    <p class="text-slate-500 text-base mb-8 flex-grow leading-relaxed">
+                        Next-generation computer vision tools for real-time environment mapping and object tracking.
+                    </p>
+                    <button class="w-full py-3.5 rounded-xl bg-white/5 border border-white/5 text-slate-500 font-semibold cursor-not-allowed flex items-center justify-center gap-2">
+                         <i data-lucide="lock" class="w-4 h-4"></i> In Development
+                    </button>
+                </div>
+
+            </div>
+            
+            <div class="flex items-center justify-center gap-8 mt-12">
+                <button id="prevBtn" class="p-4 rounded-full bg-white/5 border border-white/10 hover:bg-white/10 hover:text-white text-slate-400 transition-all backdrop-blur-sm group">
+                    <i data-lucide="arrow-left" class="w-5 h-5 group-hover:-translate-x-1 transition-transform"></i>
+                </button>
+                
+                <div class="flex gap-3" id="dotsContainer">
+                    <div class="w-12 h-1 rounded-full bg-violet-500 transition-all duration-300" id="indicator"></div>
+                </div>
+
+                <button id="nextBtn" class="p-4 rounded-full bg-white/5 border border-white/10 hover:bg-white/10 hover:text-white text-slate-400 transition-all backdrop-blur-sm group">
+                    <i data-lucide="arrow-right" class="w-5 h-5 group-hover:translate-x-1 transition-transform"></i>
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        lucide.createIcons();
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const cards = Array.from(document.querySelectorAll('.stage-card'));
+            const totalCards = cards.length;
+            let currentIndex = 0; 
+            
+            function updateStage() {
+                cards.forEach((card, i) => {
+                    // Calculate circular offset
+                    // 0 = front, 1 = right, 2 = back, 3 = left
+                    let offset = (i - currentIndex) % totalCards;
+                    if (offset < 0) offset += totalCards;
+
+                    // Reset classes
+                    card.classList.remove('pos-front', 'pos-right', 'pos-back', 'pos-left');
+
+                    // Apply new position
+                    if (offset === 0) card.classList.add('pos-front');
+                    if (offset === 1) card.classList.add('pos-right');
+                    if (offset === 2) card.classList.add('pos-back');
+                    if (offset === 3) card.classList.add('pos-left');
+                });
+            }
+
+            // Move Forward
+            function goNext() {
+                currentIndex = (currentIndex + 1) % totalCards;
+                updateStage();
+            }
+
+            // Move Backward
+            function goPrev() {
+                currentIndex = (currentIndex - 1 + totalCards) % totalCards;
+                updateStage();
+            }
+
+            // Bind Buttons
+            document.getElementById('nextBtn').addEventListener('click', goNext);
+            document.getElementById('prevBtn').addEventListener('click', goPrev);
+
+            // Click card to bring to front
+            cards.forEach((card, index) => {
+                card.addEventListener('click', () => {
+                    if (currentIndex !== index) {
+                        currentIndex = index;
+                        updateStage();
+                    }
+                });
+            });
+
+            // Keyboard navigation
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'ArrowRight') goNext();
+                if (e.key === 'ArrowLeft') goPrev();
+            });
+
+            // Initialize Layout
+            updateStage(); 
+        });
+    </script>
+</body>
+</html>

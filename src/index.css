@@ -1,0 +1,127 @@
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #050511; /* Very dark background to pop cards */
+    color: #f8fafc;
+    overflow: hidden; /* Prevent scrolling, focus on hub */
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Background animated elements */
+.bg-orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(100px);
+    opacity: 0.3;
+    z-index: -1;
+    animation: float 20s infinite ease-in-out alternate;
+}
+
+@keyframes float {
+    0% { transform: translate(0, 0) scale(1); }
+    33% { transform: translate(30px, -50px) scale(1.1); }
+    66% { transform: translate(-20px, 20px) scale(0.9); }
+    100% { transform: translate(0, 0) scale(1); }
+}
+
+.stage-container {
+    perspective: 1200px;
+    position: relative;
+    width: 100%;
+    height: 500px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.stage-card {
+    position: absolute;
+    width: 340px;
+    height: 440px;
+    border-radius: 24px;
+    background: rgba(30, 41, 59, 0.6);
+    backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    transition: all 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+    display: flex;
+    flex-direction: column;
+    padding: 2.5rem;
+    cursor: pointer;
+    box-shadow: 0 10px 30px -10px rgba(0,0,0,0.5);
+}
+
+/* Decorative border glow */
+.stage-card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1px;
+    background: linear-gradient(180deg, rgba(255,255,255,0.15), transparent);
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+}
+
+.pos-front {
+    transform: translateX(0) translateZ(0) scale(1);
+    z-index: 40;
+    opacity: 1;
+    box-shadow: 0 0 50px rgba(139, 92, 246, 0.2), 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    border-color: rgba(139, 92, 246, 0.4);
+}
+
+.pos-right {
+    transform: translateX(85%) translateZ(-150px) scale(0.85) rotateY(-10deg);
+    z-index: 30;
+    opacity: 0.5;
+}
+
+.pos-right:hover {
+    opacity: 0.8;
+    transform: translateX(85%) translateZ(-130px) scale(0.87) rotateY(-10deg);
+}
+
+.pos-back {
+    transform: translateX(0) translateZ(-300px) scale(0.7);
+    z-index: 20;
+    opacity: 0.15;
+    pointer-events: none; /* Can't click the back one directly easily */
+}
+
+.pos-left {
+    transform: translateX(-85%) translateZ(-150px) scale(0.85) rotateY(10deg);
+    z-index: 30;
+    opacity: 0.5;
+}
+
+.pos-left:hover {
+    opacity: 0.8;
+    transform: translateX(-85%) translateZ(-130px) scale(0.87) rotateY(10deg);
+}
+
+.pos-hidden {
+    transform: translateX(0) translateZ(-400px) scale(0.3);
+    opacity: 0;
+    pointer-events: none;
+}
+
+.icon-box {
+    background: linear-gradient(135deg, rgba(255,255,255,0.05), rgba(255,255,255,0.01));
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.coming-soon-badge {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    color: #94a3b8;
+}
+
+.card-disabled {
+    filter: grayscale(80%);
+}
+.pos-front.card-disabled {
+    filter: grayscale(40%); /* Less gray when front */
+}
