@@ -58,6 +58,7 @@ const CARDS_DATA = [
 
 const App = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const videoRefs = useRef({});
 
   useEffect(() => {
@@ -116,8 +117,8 @@ const App = () => {
       </div>
 
       {/* Header */}
-      <header className="absolute top-0 w-full z-50 px-8 py-5 flex justify-center items-center bg-black">
-        <div className="absolute left-8 flex items-center gap-3">
+      <header className="absolute top-0 w-full z-50 px-6 md:px-8 py-5 flex justify-between lg:justify-center items-center bg-black/80 backdrop-blur-sm lg:bg-transparent lg:backdrop-blur-none">
+        <div className="lg:absolute lg:left-8 flex items-center gap-3">
           <img src={teraLogo} alt="Tera Logo" className="w-8 h-8 object-contain" />
           <span className="text-xl font-semibold tracking-[0.2em] uppercase hidden sm:block">TERA AI</span>
         </div>
@@ -147,21 +148,68 @@ const App = () => {
             </button>
           ))}
         </nav>
+
+        {/* Mobile Menu Button */}
+        <button 
+          className="lg:hidden text-white p-2"
+          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+        >
+          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            {isMobileMenuOpen ? (
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            ) : (
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+            )}
+          </svg>
+        </button>
       </header>
 
+      {/* Mobile Menu Overlay */}
+      {isMobileMenuOpen && (
+        <div className="absolute inset-0 z-40 bg-black/95 pt-24 px-6 lg:hidden flex flex-col gap-6">
+          {CARDS_DATA.map((card, index) => (
+            <button 
+              key={card.id}
+              onClick={() => {
+                if (!card.disabled) {
+                  setCurrentIndex(index);
+                  setIsMobileMenuOpen(false);
+                }
+              }}
+              disabled={card.disabled}
+              className={`text-left text-xl font-medium tracking-wide transition-colors flex flex-col gap-1 ${
+                currentIndex === index 
+                  ? 'text-white' 
+                  : card.disabled 
+                    ? 'text-gray-600 cursor-not-allowed' 
+                    : 'text-gray-400 hover:text-white'
+              }`}
+            >
+              <div className="flex items-center gap-3">
+                {card.title}
+                {card.disabled && <span className="text-[9px] font-bold px-2 py-0.5 rounded-full bg-white/10 text-gray-500 tracking-wider">PENDING</span>}
+              </div>
+              {currentIndex === index && (
+                <div className="w-12 h-0.5 bg-white rounded-full mt-1"></div>
+              )}
+            </button>
+          ))}
+        </div>
+      )}
+
       {/* Main Content */}
-      <main className="relative z-30 h-full flex flex-col justify-center px-12 md:px-24">
+      <main className="relative z-30 h-full flex flex-col justify-center px-6 md:px-12 lg:px-24">
         <div className="max-w-3xl mt-20">
-          <p className="text-sm font-semibold tracking-[0.2em] mb-4 text-gray-300 uppercase">
+          <p className="text-xs sm:text-sm font-semibold tracking-[0.2em] mb-4 text-gray-300 uppercase">
             -- {activeCard.subtitle}
           </p>
-          <h1 className="text-6xl md:text-8xl font-black leading-[1.05] mb-8 tracking-tight text-white drop-shadow-lg uppercase whitespace-pre-line">
+          <h1 className="text-4xl sm:text-6xl md:text-8xl font-black leading-[1.05] mb-6 sm:mb-8 tracking-tight text-white drop-shadow-lg uppercase whitespace-pre-line">
             {activeCard.punchline}
           </h1>
-          <p className="text-xl text-gray-200 mb-10 max-w-xl leading-relaxed drop-shadow-md">
+          <p className="text-lg sm:text-xl text-gray-200 mb-8 sm:mb-10 max-w-xl leading-relaxed drop-shadow-md">
             {activeCard.description}
           </p>
-          <div className="flex items-center gap-4">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
             <button 
               onClick={() => {
                 if (!activeCard.disabled && activeCard.actionUrl) {

@@ -130,6 +130,91 @@
         .pos-front.card-disabled {
             filter: grayscale(40%); /* Less gray when front */
         }
+
+        /* Responsive adjustments for tablet and phone */
+        @media (max-width: 768px) {
+            .stage-card {
+                width: 280px;
+                height: 380px;
+                padding: 1.5rem;
+            }
+            .stage-container {
+                height: 450px;
+            }
+            
+            .pos-right {
+                transform: translateX(60%) translateZ(-100px) scale(0.8) rotateY(-10deg);
+            }
+            .pos-right:hover {
+                transform: translateX(60%) translateZ(-80px) scale(0.85) rotateY(-10deg);
+            }
+
+            .pos-left {
+                transform: translateX(-60%) translateZ(-100px) scale(0.8) rotateY(10deg);
+            }
+            .pos-left:hover {
+                transform: translateX(-60%) translateZ(-80px) scale(0.85) rotateY(10deg);
+            }
+            
+            .pos-back {
+                transform: translateX(0) translateZ(-200px) scale(0.6);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .stage-card {
+                width: 260px;
+                height: 360px;
+                padding: 1.5rem;
+            }
+            .stage-container {
+                height: 420px;
+            }
+            
+            .pos-right {
+                transform: translateX(45%) translateZ(-100px) scale(0.8) rotateY(-10deg);
+            }
+            .pos-right:hover {
+                transform: translateX(45%) translateZ(-80px) scale(0.85) rotateY(-10deg);
+            }
+
+            .pos-left {
+                transform: translateX(-45%) translateZ(-100px) scale(0.8) rotateY(10deg);
+            }
+            .pos-left:hover {
+                transform: translateX(-45%) translateZ(-80px) scale(0.85) rotateY(10deg);
+            }
+            
+            .pos-back {
+                transform: translateX(0) translateZ(-200px) scale(0.6);
+            }
+            
+            .stage-card h3 {
+                font-size: 1.5rem;
+                margin-bottom: 0.5rem;
+            }
+            .stage-card p {
+                font-size: 0.875rem;
+                margin-bottom: 1rem;
+            }
+            .icon-box {
+                width: 3rem;
+                height: 3rem;
+                margin-bottom: 1rem;
+            }
+            .icon-box i {
+                width: 1.5rem;
+                height: 1.5rem;
+            }
+            .coming-soon-badge {
+                font-size: 9px;
+                padding: 2px 8px;
+            }
+            .stage-card button {
+                padding: 0.75rem;
+                font-size: 0.875rem;
+            }
+        }
     </style>
 </head>
 <body class="antialiased relative">
