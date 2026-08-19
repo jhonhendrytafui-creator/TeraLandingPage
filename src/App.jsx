@@ -31,15 +31,15 @@ const CARDS_DATA = [
   {
     id: 2,
     title: "Tera Exam",
-    punchline: "INTELLIGENT PROCTORING.\nSECURE TESTING.",
-    subtitle: "NEXT-GEN ASSESSMENT",
-    description: "Next-generation computer vision tools for real-time environment mapping and object tracking.",
-    btnClass: "bg-white/10 text-slate-400 cursor-not-allowed",
-    actionText: "PENDING",
-    actionUrl: null,
-    videoUrl: null,
+    punchline: "TEST IT.\nASSESS IT.\nMEASURE IT.",
+    subtitle: "AI-POWERED ASSESSMENT",
+    description: "Tera Exam is a digital examination platform powered by AI to perform auto assessment, providing a more objective and effective testing experience.",
+    btnClass: "bg-white text-black hover:bg-gray-200",
+    actionText: "OPEN EXAM",
+    actionUrl: "https://exam.pahoacourse.online",
+    videoUrl: "/exam.mp4",
     poster: "bg-rose-900",
-    disabled: true
+    disabled: false
   },
   {
     id: 3,
