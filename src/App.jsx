@@ -289,7 +289,7 @@ const App = () => {
             {active.subtitle}
           </p>
 
-          <h1 className="font-display mb-6 text-5xl font-semibold leading-[1.02] tracking-tight sm:text-6xl xl:text-7xl">
+          <h1 className="font-display mb-6 text-5xl font-semibold uppercase leading-[1.02] tracking-tight sm:text-6xl xl:text-7xl">
             {active.punchline.map((line, i) => (
               <span key={i} className={`block ${i === active.punchline.length - 1 ? 'text-[var(--accent)]' : ''}`}>
                 {line}
