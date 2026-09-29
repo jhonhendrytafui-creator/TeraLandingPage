@@ -1,11 +1,112 @@
 @import "tailwindcss";
 
+@theme {
+  --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+  --font-display: 'Space Grotesk', 'Inter', ui-sans-serif, system-ui, sans-serif;
+}
+
 body {
-    font-family: 'Inter', sans-serif;
-    background-color: #050511;
-    color: #f8fafc;
-    overflow: hidden;
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
+  margin: 0;
+  background-color: #07070c;
+  color: #f8fafc;
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+.font-display {
+  font-family: var(--font-display);
+}
+
+/* Ambient glows follow the active product's accent */
+.glow {
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(120px);
+  opacity: 0.22;
+  background: var(--accent);
+  transition: background-color 0.8s ease;
+  will-change: transform;
+}
+.glow-a {
+  width: 45vw;
+  height: 45vw;
+  top: -15vw;
+  right: -10vw;
+  animation: drift 18s ease-in-out infinite alternate;
+}
+.glow-b {
+  width: 35vw;
+  height: 35vw;
+  bottom: -15vw;
+  left: -10vw;
+  opacity: 0.12;
+  animation: drift 22s ease-in-out infinite alternate-reverse;
+}
+@keyframes drift {
+  to { transform: translate(-4vw, 4vw) scale(1.1); }
+}
+
+.grid-bg {
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+  background-size: 64px 64px;
+  mask-image: radial-gradient(ellipse at 50% 30%, black 20%, transparent 75%);
+}
+
+/* Entrance + preview micro-animations */
+.fade-up {
+  animation: fade-up 0.6s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: none; }
+}
+
+.grow-bar {
+  transform-origin: left;
+  animation: grow-x 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+@keyframes grow-x {
+  from { transform: scaleX(0); }
+}
+
+.rise-bar {
+  transform-origin: bottom;
+  animation: grow-y 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+@keyframes grow-y {
+  from { transform: scaleY(0); }
+}
+
+.typing-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.5);
+  animation: bounce 1s ease-in-out infinite;
+}
+@keyframes bounce {
+  0%, 60%, 100% { transform: none; opacity: 0.4; }
+  30% { transform: translateY(-4px); opacity: 1; }
+}
+
+.live-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 9999px;
+  background: var(--accent);
+  box-shadow: 0 0 0 0 var(--accent);
+  animation: ping 1.6s ease-out infinite;
+}
+@keyframes ping {
+  to { box-shadow: 0 0 0 6px transparent; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
